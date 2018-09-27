@@ -3,7 +3,7 @@
 \_\(_)/_/
  _//"\\_  
   /   \
-Questa funzione mi permette di cercare tutti i nomi delle classi appartenenti alle API standard android'''
+ '''
 import numpy as np
 from bs4 import BeautifulSoup
 import urllib
@@ -12,50 +12,6 @@ import json
 import requests
 import os
 import re
-'''
-f=codecs.open("C:\\Users\\barfo\\Desktop\\prog\\parseHTML\\parseandro.html", 'r')
-#print f.read()
-soup = BeautifulSoup(f.read(), 'html.parser')
-c = soup.find_all("td",{"class":"jd-linkcol"})
-for nome in c:
-    #for link in soup.find_all( href=True):
-#       print link['href']
-    link=nome.find(href=True)
-    print link['href']
-    '''
-
-'''
-import urllib
-url = "https://developer.android.com/reference/javax/xml/xpath/XPathException.html"
-f = urllib.urlopen(url)
-soup = BeautifulSoup(f.read(), 'html.parser')
-c = soup.find("meta",{"itemprop":"name"})
-
-#c = soup.find_all("td",{"class":"jd-linkcol"})
-
-print c['content']
-'''
-
-#f=codecs.open("C:\\Users\\barfo\\Desktop\\prog\\parseHTML\\parseandro.", 'r')
-#print f.read()
-#soup = BeautifulSoup(f.read(), 'html.parser')
-#c = soup.find_all("td",{"class":"jd-linkcol"})
-
-#for nome in c:
-
-'''
-path = r'C:\Users\barfo\Desktop\prog\utili\parseHTML\res2.txt'
-with open(path) as f:
-    content = f.readlines()
-# you may also want to remove whitespace characters like `\n` at the end of each line
-content = [x.strip() for x in content] 
-for url in content:
-    f = urllib.urlopen(url)
-    soup = BeautifulSoup(f.read(), 'html.parser')
-    c = soup.find("meta",{"itemprop":"name"})
-    value = c['content']
-    print value.encode("utf-8")
-'''
 
 ''' questa funzione effettua una ricerca su Apkpure e ritorna un insieme con il nome delle prime 'n' applicazioni trovate con dimensione <= 'size' ( in MB)
 della categoria 'topic'
@@ -162,24 +118,3 @@ def download_from_apkpure(app_list):
                                     path= r'C:\Users\barfo\Desktop\apktool\benevole\\'+app+'.apk'
                                     with open(path, 'wb') as local_file:
                                             local_file.write(r.content)
-
-
-# ritorna le app presenti nella dir 'benevole'      
-def file_benevoli(path):
-    listFile = []
-    for path in os.walk(path).next()[2]:
-        listFile.append(path[:-4]) # rimuovo .apk
-    return listFile
-
-with open('altroo.json', 'r') as fp:
-    data = json.load(fp)
-
-esistenti=file_benevoli(r'C:\Users\barfo\Desktop\apktool\benevole') # tot file scaricati
-rimanenti = set(data).difference(set(esistenti))# app ancora da scaricare
-#rimanenti = rimanenti.difference(set(file_benevoli(r'C:\Users\barfo\Desktop\apktool\benevolePiccole')))
-print len(rimanenti)
-
-#for name in search_by_size( 10,100,'travel_and_local'):
-#    print name
-download_from_apkpure(list(rimanenti)) 
-#download_from_apkpure(['com.dts.freefireth'])
