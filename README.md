@@ -1,2 +1,2 @@
 # Cecia
-![](cecia\images\superLogo.png)
+![](/cecia/images/superLogo.png)
