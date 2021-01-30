@@ -14,7 +14,6 @@ f = Figlet(font='slant')
 bigName = f.renderText('Cecia')
 usage = bigName+'\n A tool for static analysis on Android ransomware, Copyright (c) Francesco Fornasieri \n version:1.0 \n \n Usage: Cecia.py [APK-FILE-NAME]'
 
-''' Questa casse permette di effettuare parsing di 1 file apk decompilato con apktool - fase di FeatureExtraction'''
 class SmaliParser(object):
     def __init__(self, file):
         """
