@@ -13,9 +13,7 @@ import requests
 import os
 import re
 
-''' questa funzione effettua una ricerca su Apkpure e ritorna un insieme con il nome delle prime 'n' applicazioni trovate con dimensione <= 'size' ( in MB)
-della categoria 'topic'
-'''
+
 def search_by_size(size,n,topic):
     """
     this function does a search on Apkpure and find the first n application of the given category
