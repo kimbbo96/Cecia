@@ -20,11 +20,11 @@ class SmaliParser(object):
         """
         :param file: directory del file da analizzare
         """
-        with open('appdict.json', 'r') as fp: # carico il dizionario
-            self.allCall = json.load(fp)  # questo dizionario contiene come chiave tutte le chiamate alle API standard di tutti i file che devono essere calcolati e valore 0
+        with open('appdict.json', 'r') as fp:
+            self.allCall = json.load(fp)
         with open (r'C:\Users\barfo\Desktop\prog\cecia\tabella.csv') as csvfile:
             csv_reader = csv.reader(csvfile)
-            self.csv_colonne = next(csv_reader) # colonne csv
+            self.csv_colonne = next(csv_reader)
         self.pattern_method_data = re.compile(ur'^\.method.+?\ (.+?(?=\())\((.*?)\)(.*?$)(.*?(?=\.end\ method))', re.MULTILINE | re.DOTALL)
         self.pattern_called_methods = re.compile(ur'invoke-.*?\ {(.*?)}, (.+?(?=;))\;\-\>(.+?(?=\())\((.*?)\)(.*?)(?=$|;)', re.MULTILINE | re.DOTALL)
         self.pattern_move_result = re.compile(ur'move-result.+?(.*?)$', re.MULTILINE | re.DOTALL)
@@ -69,9 +69,7 @@ class SmaliParser(object):
     
                     
     
-    # questa funzaione permette di aggiornare allCall ,viene effettutata una ricerca ricorsiva,
     def countCallFilesRec(self):
-        #print  os.path.exists(self.file)
         for root, dirnames, filenames in os.walk(self.file):
             for filename in fnmatch.filter(filenames, '*.smali'):
                 filepath = os.path.join(root, filename)
@@ -87,7 +85,6 @@ class SmaliParser(object):
 
     
  
-     # dato il file smali in input cerchiamo tutte le classi invocate nel file ( metodo invoke), e aggiorniamo allCall
     def countCallFile(self, content):
         class_name = self.get_class_name(content=content)
         methods = self.get_methods(content=content)
@@ -99,7 +96,6 @@ class SmaliParser(object):
                 self.updateDict(called_method[1]) # aggiorno il dizionario(eventualmente)
                     
                
-    # dato un package in input, se quest'ultimo appartiene all'insieme SDK Android allora aggiorna allCall
     def updateDict(self,package):
         package = package.replace("/",".") 
         package = package[1:] #levo il primo carttere, ovvero 'L' 
@@ -115,7 +111,6 @@ class SmaliParser(object):
             wr = csv.writer(fd)
             wr.writerow(newline)
 
-# utilizza apktool sul file dato in input
 def decompile_apk(path):
     devnull = open(os.devnull, 'wb') 
     bashCommand= 'apktool d '+path
@@ -124,10 +119,7 @@ def decompile_apk(path):
 
 def predict_result(diz):
 
-    #data = pd.DataFrame(diz,dtype='int',index=[0],columns=diz.keys())
     data = pd.read_csv(r'C:\Users\barfo\Desktop\prog\cecia\tabella.csv') #estraggo la colonna nomi con pandas
-    #with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    #    print data 
     model_path = os.getcwd()+'\\classificator.sav' # path del classificatore
     loaded_model = pickle.load(open(model_path, 'rb')) # lo carico
     predicted = loaded_model.predict(data.values)
@@ -138,24 +130,20 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         print usage
     else:
-        decompile_apk(sys.argv[1]) # decompilo l'apk
-        nameDir = os.path.basename(sys.argv[1])[:-4]# nome della dir appena creata
+        decompile_apk(sys.argv[1])
+        nameDir = os.path.basename(sys.argv[1])[:-4]
         fullPathDir = os.getcwd()+'\\'+nameDir
-        #print fullPathDir
         data = SmaliParser(fullPathDir)
         data.countCallFilesRec()
         result = predict_result(data.allCall)
         if result == 0:
             print "Trusted file"
         else: print "Ransomware!"
-        #print os.path.exists(fullPathDir)
         while os.path.exists(fullPathDir):
             shutil.rmtree(fullPathDir,ignore_errors=True)
         os.remove(r'C:\Users\barfo\Desktop\prog\cecia\tabella.csv')
         with open(r'C:\Users\barfo\Desktop\prog\cecia\tabella.csv','a') as fd:
             wr = csv.writer(fd)
             wr.writerow(data.csv_colonne)
-        #print os.path.exists(fullPathDir)
-    
         
     
